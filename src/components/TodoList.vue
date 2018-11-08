@@ -2,6 +2,8 @@
   .todo-list
     header.todo-list__header
       h3.todo-list__title TO DO
+      svg.todo-list__logo(width="70" height="50")
+        image(xlink:href="@/assets/images/logo.svg" width="70" height="50")
       .todo-list__actions
         .todo-list__add(@click="addTask") Добавить
     .todo-list__tasks(v-if="tasks.length")
@@ -108,6 +110,7 @@ export default {
 
 <style scoped lang="sass">
 @import '../assets/styles/_colors'
+@import '../assets/styles/_mixins'
 
 .todo-list
   width: 420px
@@ -117,19 +120,29 @@ export default {
     display: flex
     justify-content: space-between
     align-items: center
+    position: relative
+    z-index: 5
 
   &__title
     color: $brand-color
+    margin-left: 80px
+
+  &__logo
+    position: absolute
+    top: 50%
+    left: 0
+    transform: translateY(-50%)
 
   &__tasks
     position: relative
     border-radius: 5px
     box-shadow: 0 0 40px rgba(mix(black, $brand-color, 20%), 0.15)
     background: #fff
+    z-index: 3
 
   &__task-group
     padding: 50px
-    border-bottom: 1px solid #ccc
+    border-bottom: 1px solid rgba(mix(black, $brand-color, 20%), 0.15)
 
     &:last-child
       border-bottom: none
@@ -142,12 +155,26 @@ export default {
     font-size: 13px
 
   &__empty-list
+    background: #fff
+    box-shadow: 0 0 40px rgba(mix(black, $brand-color, 20%), 0.15)
+    border-radius: 5px
+    padding: 50px
     text-align: center
     color: mix(black, $brand-color, 50%)
 
   &__add
     cursor: pointer
-    color: mix(black, $brand-color, 50%)
+    color: mix(white, $brand-color, 20%)
+    font-size: 13px
+    background: #fff
+    box-shadow: 0 0 10px rgba($brand-color, 0.2)
+    padding: 7px 12px
+    border-radius: 5px
+    font-weight: bold
+    transition: color 0.2s
+
+    &:hover
+      color: mix(black, $brand-color, 20%)
 
 .tasks-list-enter,
 .tasks-list-leave-to
