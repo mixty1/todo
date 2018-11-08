@@ -1,28 +1,20 @@
 <template lang="pug">
   .todo-list
-    header.header
-      h3.title TO DO
-      .header-actions-bar
-        .add(@click="addTask") Добавить
-    .lists(v-if="tasks.length")
-      .uncompleted-list(v-if="uncompletedTasks.length")
-        task.item.-uncompleted(
-          v-for="task in uncompletedTasks"
-          :key="task.id"
-          v-bind="task"
-          @change="onChange"
-          @remove="onRemove"
-          autofocus
-        )
-      .completed-list(v-if="completedTasks.length")
-        task.item(
-          v-for="task in completedTasks"
+    header.todo-list__header
+      h3.todo-list__title TO DO
+      .todo-list__actions
+        .todo-list__add(@click="addTask") Добавить
+    .todo-list__tasks(v-if="tasks.length")
+      .todo-list__task-group(v-for="(taskGroup, date) in groupedTasks")
+        .todo-list__date {{ date }}
+        task.todo-list__task(
+          v-for="task in taskGroup"
           :key="task.id"
           v-bind="task"
           @change="onChange"
           @remove="onRemove"
         )
-    .empty-list(v-else)
+    .todo-list__empty-list(v-else)
       p Отлично, Работаем дальше!
 </template>
 
@@ -33,22 +25,54 @@ import _ from 'lodash'
 const emptyTask = {
   id: null,
   text: '',
+  createdAt: null,
   completed: false
 }
 
 export default {
   data: () => ({
-    tasks: []
+    tasks: [
+      {
+        id: '1',
+        text: 'Лишить Мишу премии',
+        createdAt: new Date(),
+        completed: true
+      },
+      {
+        id: '2',
+        text: 'Подготовить презентацию по Гайдми',
+        createdAt: new Date(),
+        completed: true
+      },
+      {
+        id: '3',
+        text: 'Состряпать бэк для этой тудушки',
+        createdAt: new Date(new Date() - 300 * 24 * 60 * 60 * 1000),
+        completed: false
+      },
+      {
+        id: '4',
+        text: 'Полистать пикабу',
+        createdAt: new Date(new Date() - 2000 - 300 * 24 * 60 * 60 * 1000),
+        completed: true
+      }
+    ]
   }),
   computed: {
-    completedTasks () {
-      return this.tasks.filter(task => task.completed)
-    },
-    uncompletedTasks () {
-      return this.tasks.filter(task => !task.completed)
+    groupedTasks () {
+      return _.groupBy(this.tasks, task => this.getDate(task.createdAt))
     }
   },
   methods: {
+    getDate (date) {
+      let day = date.getDate()
+      let month = date.getMonth() + 1
+
+      day = day < 10 ? `0${day}` : day
+      month = month < 10 ? `0${month}` : month
+
+      return `${day}.${month}.${date.getFullYear()}`
+    },
     addTask () {
       const lastTask = this.tasks[this.tasks.length - 1]
 
@@ -56,6 +80,7 @@ export default {
         let task = { ...emptyTask }
 
         task.id = _.uniqueId()
+        task.createdAt = new Date()
         this.tasks.push(task)
       }
     },
@@ -87,33 +112,35 @@ export default {
   width: 420px
   margin: 0 auto
 
-  > .header
+  &__header
     display: flex
     justify-content: space-between
     align-items: center
 
-  > .header > .title
+  &__title
     color: $brand-color
 
-  > .lists
+  &__tasks
     border-radius: 5px
-    overflow: hidden
     box-shadow: 0 0 20px rgba(100, 100, 100, 0.2)
+    background: #fff
 
-  > .lists > .completed-list,
-  > .lists > .uncompleted-list
+  &__task-group
     padding: 50px
+    border-bottom: 1px solid #ccc
 
-  > .lists > .completed-list
-    background: linear-gradient(180deg, rgba(176,168,254,1) 0%, rgba(122,124,214,1) 100%)
+    &:last-child
+      border-bottom: none
 
-  > .empty-list
+  &__date
+    color: #aaa
+    font-size: 13px
+
+  &__empty-list
     text-align: center
     color: mix(black, $brand-color, 50%)
 
-.header-actions-bar
-
-  > .add
+  &__add
     cursor: pointer
     color: mix(black, $brand-color, 50%)
 </style>
