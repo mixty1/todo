@@ -86,6 +86,7 @@ export default {
     background: transparent
     color: mix(black, $main-gradient, 30%)
     font-size: 14px
+    transition: color 0.2s
 
     &--completed
       text-decoration: line-through
@@ -93,6 +94,7 @@ export default {
 
     &:focus
       text-decoration: none
+      color: mix(white, $main-gradient, 20%)
 
   &__time
     width: 160px
@@ -109,7 +111,7 @@ export default {
     top: 50%
     left: 105%
     transform: translateY(-50%)
-    transition: opacity 0.4s ease-in-out
+    transition: visibility 0.3s, opacity 0.3s ease-in-out
 
     &:before
       content: ''
