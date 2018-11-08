@@ -4,16 +4,16 @@
       :checked="completed"
       @change="$emit('change', { completed: $event.target.checked, id })"
     )
-    input.text(
+    input.task__text(
       type="text"
       :value="text"
-      :class="{ '-completed': completed }"
+      :class="{ 'task__text--completed': completed }"
       @input="$emit('change', { text: $event.target.value, id })"
       :autofocus="autofocus"
     )
-    svg.remove(@click="$emit('remove', id)" width="20" height="20")
-      image(v-if="completed" xlink:href="@/assets/images/close-icon_white.svg" width="20" height="20")
-      image(v-else xlink:href="@/assets/images/close-icon_purple.svg" width="20" height="20")
+    .task__time {{ createdAt | time }}
+    svg.task__remove(@click="$emit('remove', id)" width="20" height="20")
+      image(xlink:href="@/assets/images/close-icon_purple.svg" width="20" height="20")
 </template>
 
 <script>
@@ -36,6 +36,20 @@ export default {
     autofocus: {
       type: Boolean,
       default: false
+    },
+    createdAt: Date
+  },
+  filters: {
+    time (date) {
+      let hours = date.getHours()
+      let minutes = date.getMinutes()
+      let seconds = date.getSeconds()
+
+      hours = hours < 10 ? `0${hours}` : hours
+      minutes = minutes < 10 ? `0${minutes}` : minutes
+      seconds = seconds < 10 ? `0${seconds}` : seconds
+
+      return `${hours}.${minutes}.${seconds}`
     }
   },
   components: {
@@ -53,13 +67,18 @@ export default {
   align-items: center
   border-bottom: 1px dashed $main-gradient
   padding: 10px 0
+  position: relative
 
-  &:hover > .remove
+  &:hover .task__remove
     visibility: visible
     opacity: 1
     transform: scale(1)
 
-  > .text
+  &:hover .task__time
+    visibility: visible
+    opacity: 1
+
+  &__text
     width: 85%
     margin-left: 10px
     border: none
@@ -67,19 +86,40 @@ export default {
     background: transparent
     color: mix(black, $main-gradient, 30%)
     font-size: 14px
-    transition: color 0.2s
 
-    &.-completed
+    &--completed
       text-decoration: line-through
       color: mix(black, $main-gradient, 50%)
 
     &:focus
       text-decoration: none
 
-    &.-completed:focus
-      color: mix(white, $main-gradient, 80%)
+  &__time
+    opacity: 0
+    visibility: hidden
+    color: #fff
+    background: $brand-color
+    padding: 5px 10px
+    border-radius: 3px
+    font-size: 12px
+    font-weight: bold
+    position: absolute
+    top: 50%
+    left: 105%
+    transform: translateY(-50%)
+    transition: opacity 0.4s ease-in-out
 
-  > .remove
+    &:before
+      content: ''
+      border-right: 5px solid $brand-color
+      border-top: 5px solid transparent
+      border-bottom: 5px solid transparent
+      position: absolute
+      top: 50%
+      right: 100%
+      transform: translateY(-50%)
+
+  &__remove
     width: 20px
     cursor: pointer
     opacity: 0
