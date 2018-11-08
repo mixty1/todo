@@ -7,15 +7,16 @@
     .todo-list__tasks(v-if="tasks.length")
       .todo-list__task-group(v-for="(taskGroup, date) in groupedTasks")
         .todo-list__date {{ date }}
-        task.todo-list__task(
-          v-for="task in taskGroup"
-          :key="task.id"
-          v-bind="task"
-          @change="onChange"
-          @remove="onRemove"
-        )
+        transition-group(name="tasks-list")
+          task.todo-list__task(
+            v-for="task in taskGroup"
+            :key="task.id"
+            v-bind="task"
+            @change="onChange"
+            @remove="onRemove"
+          )
     .todo-list__empty-list(v-else)
-      p Отлично, Работаем дальше!
+      p Отлично, работаем дальше!
 </template>
 
 <script>
@@ -121,6 +122,7 @@ export default {
     color: $brand-color
 
   &__tasks
+    position: relative
     border-radius: 5px
     box-shadow: 0 0 20px rgba(100, 100, 100, 0.2)
     background: #fff
@@ -131,6 +133,9 @@ export default {
 
     &:last-child
       border-bottom: none
+
+  &__task
+    transition: transform 0.3s, opacity 0.3s
 
   &__date
     color: #aaa
@@ -143,4 +148,13 @@ export default {
   &__add
     cursor: pointer
     color: mix(black, $brand-color, 50%)
+
+.tasks-list-enter,
+.tasks-list-leave-to
+  opacity: 0
+  transform: translateY(30px)
+
+.tasks-list-leave-active
+  position: absolute
+  width: calc(100% - 100px)
 </style>
