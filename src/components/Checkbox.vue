@@ -1,12 +1,12 @@
 <template lang="pug">
   .checkbox
-    input.input(
+    input.checkbox__input(
       type="checkbox"
       :id="`checkbox-${uuid}`"
       :checked="checked"
       @change="$emit('change', $event)"
     )
-    label.label(:for="`checkbox-${uuid}`")
+    label.checkbox__label(:for="`checkbox-${uuid}`")
 </template>
 
 <script>
@@ -34,16 +34,16 @@ export default {
   width: 19px
   height: 19px
 
-  > .input
+  &__input
     display: none
 
-    &:checked + .label:after
-      border: 1px solid mix(black, $brand-color, 25%)
+    &:checked + .checkbox__label:after
+      border: 1px solid transparent
 
-    &:checked + .label:before
+    &:checked + .checkbox__label:before
       opacity: 1
 
-  > .label
+  &__label
     cursor: pointer
     width: 100%
     height: 100%
@@ -56,6 +56,7 @@ export default {
       height: 100%
       border-radius: 50%
       border: 1px solid $brand-color
+      transition: border-color
       +vh-align
       z-index: 2
 
@@ -63,10 +64,10 @@ export default {
       content: ''
       background: url('../assets/images/check-icon_purple.svg') no-repeat center
       background-size: 100% 100%
-      width: 80%
-      height: 80%
+      width: 100%
+      height: 100%
       opacity: 0
-      transition: opacity 0.2s
+      transition: opacity 0.2s, transform 0.2s
       +vh-align
       z-index: 3
 </style>
