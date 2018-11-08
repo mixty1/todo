@@ -31,8 +31,8 @@ export default {
 
 .checkbox
   position: relative
-  width: 19px
-  height: 19px
+  width: 15px
+  height: 15px
 
   &__input
     display: none
@@ -64,8 +64,8 @@ export default {
       content: ''
       background: url('../assets/images/check-icon_purple.svg') no-repeat center
       background-size: 100% 100%
-      width: 100%
-      height: 100%
+      width: 18px
+      height: 18px
       opacity: 0
       transition: opacity 0.2s, transform 0.2s
       +vh-align
