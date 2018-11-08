@@ -152,7 +152,7 @@ export default {
 .tasks-list-enter,
 .tasks-list-leave-to
   opacity: 0
-  transform: translateY(30px)
+  transform: translateX(100px)
 
 .tasks-list-leave-active
   position: absolute
