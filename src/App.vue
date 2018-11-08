@@ -1,6 +1,7 @@
 <template lang="pug">
   #app
-    TodoList
+    .wrap
+      TodoList
 </template>
 
 <script>
@@ -15,11 +16,28 @@ export default {
 </script>
 
 <style lang="sass">
-#app
+@import './assets/styles/_colors'
+
+html,
+body
+  height: 100%
+  outline: none
+  margin: 0
+  box-sizing: border-box
   font-family: 'Avenir', Helvetica, Arial, sans-serif
   -webkit-font-smoothing: antialiased
   -moz-osx-font-smoothing: grayscale
   color: #2c3e50
-  margin: 0
-  box-sizing: border-box
+
+#app
+  height: 100%
+  display: flex
+  flex-direction: column
+  justify-content: center
+  align-items: center
+
+.wrap
+  width: 100%
+  overflow: auto
+  padding: 50px 0
 </style>
