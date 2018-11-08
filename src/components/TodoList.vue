@@ -124,7 +124,7 @@ export default {
   &__tasks
     position: relative
     border-radius: 5px
-    box-shadow: 0 0 20px rgba(100, 100, 100, 0.2)
+    box-shadow: 0 0 40px rgba(mix(black, $brand-color, 20%), 0.15)
     background: #fff
 
   &__task-group
