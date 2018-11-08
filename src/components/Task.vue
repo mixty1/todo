@@ -9,14 +9,40 @@
       :value="text"
       :class="{ 'task__text--completed': completed }"
       @input="$emit('change', { text: $event.target.value, id })"
+      @keydown="onType"
+      @keyup="onStopType"
       :autofocus="autofocus"
     )
     .task__time Время создания: {{ createdAt | time }}
-    svg.task__remove(@click="$emit('remove', id)" width="20" height="20")
-      image(xlink:href="@/assets/images/close-icon_purple.svg" width="20" height="20")
+    transition(name="fade" mode="out-in")
+      svg.task__typing(
+        v-if="isTyping"
+        :class="{ 'task__remove--visible': isTyping }"
+        width="20"
+        height="20"
+        key="typing"
+      )
+        image(
+          xlink:href="@/assets/images/pen-icon_purple.svg"
+          width="20"
+          height="20"
+        )
+      svg.task__remove(
+        v-else
+        @click="$emit('remove', id)"
+        width="20"
+        height="20"
+        key="remove"
+      )
+        image(
+          xlink:href="@/assets/images/close-icon_purple.svg"
+          width="20"
+          height="20"
+        )
 </template>
 
 <script>
+import { debounce } from 'lodash'
 import Checkbox from './Checkbox'
 
 export default {
@@ -39,6 +65,9 @@ export default {
     },
     createdAt: Date
   },
+  data: () => ({
+    isTyping: false
+  }),
   filters: {
     time (date) {
       let hours = date.getHours()
@@ -51,6 +80,16 @@ export default {
 
       return `${hours}.${minutes}.${seconds}`
     }
+  },
+  methods: {
+    onType (e) {
+      if (!(e.keyCode === 9)) {
+        this.isTyping = true
+      }
+    },
+    onStopType: debounce(function () {
+      this.isTyping = false
+    }, 1000)
   },
   components: {
     Checkbox
@@ -123,12 +162,26 @@ export default {
       right: 100%
       transform: translateY(-50%)
 
-  &__remove
+  &__remove,
+  &__typing
     width: 20px
     cursor: pointer
     opacity: 0
     visibility: hidden
     transform: scale(0.5)
-    transition: opacity 0.2s, transform 0.2s
+    transition: opacity 0.2s, transform 0.2s, visibility 0.2s
     filter: drop-shadow(0 0 10px rgba($brand-color, 0.5))
+
+    &--visible
+      visibility: visible
+      opacity: 1
+      transform: scale(1)
+
+.fade-enter-active,
+.fade-leave-active
+  transition: opacity 0.3s ease
+
+.fade-enter,
+.fade-leave-to
+  opacity: 0
 </style>
