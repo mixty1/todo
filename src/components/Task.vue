@@ -11,7 +11,7 @@
       @input="$emit('change', { text: $event.target.value, id })"
       :autofocus="autofocus"
     )
-    .task__time {{ createdAt | time }}
+    .task__time Время создания: {{ createdAt | time }}
     svg.task__remove(@click="$emit('remove', id)" width="20" height="20")
       image(xlink:href="@/assets/images/close-icon_purple.svg" width="20" height="20")
 </template>
@@ -95,9 +95,11 @@ export default {
       text-decoration: none
 
   &__time
+    width: 160px
     opacity: 0
     visibility: hidden
     color: #fff
+    text-align: center
     background: $brand-color
     padding: 5px 10px
     border-radius: 3px
