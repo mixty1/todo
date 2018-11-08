@@ -52,7 +52,7 @@ export default {
     addTask () {
       const lastTask = this.tasks[this.tasks.length - 1]
 
-      if (_.isEmpty(this.tasks) || _.has(lastTask, 'text') && lastTask.text.trim()) {
+      if (_.isEmpty(this.tasks) || (_.has(lastTask, 'text') && lastTask.text.trim())) {
         let task = { ...emptyTask }
 
         task.id = _.uniqueId()
@@ -106,13 +106,13 @@ export default {
 
   > .lists > .completed-list
     background: linear-gradient(180deg, rgba(176,168,254,1) 0%, rgba(122,124,214,1) 100%)
-  
+
   > .empty-list
     text-align: center
     color: mix(black, $brand-color, 50%)
 
 .header-actions-bar
-  
+
   > .add
     cursor: pointer
     color: mix(black, $brand-color, 50%)
