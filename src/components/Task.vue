@@ -2,8 +2,13 @@
   .task(:class="{ 'task--border_white': ungroupped }")
     checkbox(
       :checked="completed"
-      small
+      :small="ungroupped"
       @change="$emit('change', { completed: $event.target.checked, id })"
+    )
+    date-picker(
+      :ungroupped="ungroupped"
+      :date="scheduledAt"
+      @input="$emit('change', { scheduledAt: $event, id })"
     )
     input.task__text(
       type="text"
@@ -14,7 +19,7 @@
       @keyup="onStopType"
       :autofocus="autofocus"
     )
-    .task__time(v-if="createdAt") Время создания: {{ createdAt | time }}
+    .task__time(v-if="scheduledAt") Время: {{ scheduledAt | time }}
     transition(name="fade" mode="out-in")
       svg.task__typing(
         v-if="isTyping"
@@ -58,7 +63,7 @@
 
 <script>
 import { debounce } from 'lodash'
-import DatePicker from 'vue2-datepicker'
+import DatePicker from './DatePicker'
 import Checkbox from './Checkbox'
 
 export default {
@@ -83,10 +88,11 @@ export default {
       type: Boolean,
       default: false
     },
-    createdAt: Date
+    scheduledAt: Date
   },
   data: () => ({
-    isTyping: false
+    isTyping: false,
+    date: null
   }),
   filters: {
     time (date) {
@@ -98,7 +104,7 @@ export default {
       minutes = minutes < 10 ? `0${minutes}` : minutes
       seconds = seconds < 10 ? `0${seconds}` : seconds
 
-      return `${hours}.${minutes}.${seconds}`
+      return `${hours}:${minutes}:${seconds}`
     }
   },
   methods: {
@@ -112,7 +118,8 @@ export default {
     }, 1000)
   },
   components: {
-    Checkbox
+    Checkbox,
+    DatePicker
   }
 }
 </script>
@@ -141,31 +148,30 @@ export default {
     opacity: 1
 
   &__text
-    width: 85%
-    margin-left: 10px
+    flex: 1
     border: none
     outline: none
     background: transparent
-    color: mix(black, $brand-color, 30%)
+    color: mix(black, $brand-color, 40%)
     font-size: 14px
     transition: color 0.2s
 
     &--completed
       text-decoration: line-through
-      color: mix(black, $brand-color, 50%)
+      color: mix(black, $brand-color, 40%)
 
     &--color_white
       color: #fff
 
     &:focus
       text-decoration: none
-      color: mix(white, $brand-color, 20%)
+      color: mix(white, $brand-color, 10%)
 
     &--color_white:focus
       color: white
 
   &__time
-    width: 160px
+    width: 100px
     opacity: 0
     visibility: hidden
     color: #fff
