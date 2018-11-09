@@ -2,17 +2,20 @@
   .todo-list
     header.todo-list__header
       h3.todo-list__title TO DO
-      svg.todo-list__logo(width="70" height="50")
-        image(xlink:href="@/assets/images/logo.svg" width="70" height="50")
+      img.todo-list__logo(src="@/assets/images/logo.png" width="70" height="50")
       .todo-list__actions
         .todo-list__add(@click="addTask") Добавить
     .todo-list__tasks(v-if="tasks.length")
-      .todo-list__task-group(v-for="(taskGroup, date) in groupedTasks")
-        .todo-list__date {{ date }}
+      .todo-list__task-group(
+        v-for="(taskGroup, date) in groupedTasks"
+        :class="{ 'todo-list__task-group--ungroupped': date === 'ungroupped' }"
+      )
+        .todo-list__date(v-if="date !== 'ungroupped'") {{ date }}
         transition-group(name="tasks-list")
           task.todo-list__task(
             v-for="task in taskGroup"
             :key="task.id"
+            :ungroupped="date === 'ungroupped'"
             v-bind="task"
             @change="onChange"
             @remove="onRemove"
@@ -35,35 +38,41 @@ const emptyTask = {
 export default {
   data: () => ({
     tasks: [
-      {
-        id: '1',
-        text: 'Лишить Мишу премии',
-        createdAt: new Date(),
-        completed: true
-      },
-      {
-        id: '2',
-        text: 'Подготовить презентацию по Гайдми',
-        createdAt: new Date(),
-        completed: true
-      },
-      {
-        id: '3',
-        text: 'Состряпать бэк для этой тудушки',
-        createdAt: new Date(new Date() - 300 * 24 * 60 * 60 * 1000),
-        completed: false
-      },
-      {
-        id: '4',
-        text: 'Полистать пикабу',
-        createdAt: new Date(new Date() - 2000 - 300 * 24 * 60 * 60 * 1000),
-        completed: true
-      }
+      // {
+      //   id: '1',
+      //   text: 'Лишить Мишу премии',
+      //   createdAt: new Date(),
+      //   completed: true
+      // },
+      // {
+      //   id: '2',
+      //   text: 'Подготовить презентацию по Гайдми',
+      //   createdAt: new Date(),
+      //   completed: true
+      // },
+      // {
+      //   id: '3',
+      //   text: 'Состряпать бэк для этой тудушки',
+      //   createdAt: new Date(new Date() - 300 * 24 * 60 * 60 * 1000),
+      //   completed: false
+      // },
+      // {
+      //   id: '4',
+      //   text: 'Полистать пикабу',
+      //   createdAt: new Date(new Date() - 2000 - 300 * 24 * 60 * 60 * 1000),
+      //   completed: true
+      // }
     ]
   }),
   computed: {
     groupedTasks () {
-      return _.groupBy(this.tasks, task => this.getDate(task.createdAt))
+      return _.groupBy(this.tasks, task => {
+        if (task.createdAt) {
+          return this.getDate(task.createdAt)
+        }
+
+        return 'ungroupped'
+      })
     }
   },
   methods: {
@@ -83,7 +92,7 @@ export default {
         let task = { ...emptyTask }
 
         task.id = _.uniqueId()
-        task.createdAt = new Date()
+        // task.createdAt = new Date()
         this.tasks.push(task)
       }
     },
@@ -143,6 +152,14 @@ export default {
   &__task-group
     padding: 50px
     border-bottom: 1px solid rgba(mix(black, $brand-color, 20%), 0.15)
+    transition: background-color 0.2s
+
+    &--ungroupped
+      background: $main-gradient
+      border-radius: 0 5px 5px 0
+
+      &:last-child
+        border-radius: 5px
 
     &:last-child
       border-bottom: none
