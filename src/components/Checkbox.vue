@@ -6,7 +6,10 @@
       :checked="checked"
       @change="$emit('change', $event)"
     )
-    label.checkbox__label(:for="`checkbox-${uuid}`")
+    label.checkbox__label(
+      :for="`checkbox-${uuid}`"
+      :class="{ 'checkbox__label--small': small }"
+    )
 </template>
 
 <script>
@@ -14,6 +17,10 @@ import { uniqueId } from 'lodash'
 
 export default {
   props: {
+    small: {
+      type: Boolean,
+      default: false
+    },
     checked: {
       type: Boolean,
       default: false
@@ -51,7 +58,7 @@ export default {
 
     &:after
       content: ''
-      background: rgba(#fff, 0.8)
+      background: #fff
       width: 100%
       height: 100%
       border-radius: 50%
@@ -70,4 +77,8 @@ export default {
       transition: opacity 0.2s, transform 0.2s
       +vh-align
       z-index: 3
+
+    &--small:before
+      width: 13px
+      height: 13px
 </style>
