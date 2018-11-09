@@ -1,19 +1,20 @@
 <template lang="pug">
-  .task
+  .task(:class="{ 'task--border_white': ungroupped }")
     checkbox(
       :checked="completed"
+      small
       @change="$emit('change', { completed: $event.target.checked, id })"
     )
     input.task__text(
       type="text"
       :value="text"
-      :class="{ 'task__text--completed': completed }"
+      :class="{ 'task__text--completed': completed, 'task__text--color_white': ungroupped }"
       @input="$emit('change', { text: $event.target.value, id })"
       @keydown="onType"
       @keyup="onStopType"
       :autofocus="autofocus"
     )
-    .task__time Время создания: {{ createdAt | time }}
+    .task__time(v-if="createdAt") Время создания: {{ createdAt | time }}
     transition(name="fade" mode="out-in")
       svg.task__typing(
         v-if="isTyping"
@@ -23,6 +24,13 @@
         key="typing"
       )
         image(
+          v-if="ungroupped"
+          xlink:href="@/assets/images/pen-icon_white.svg"
+          width="20"
+          height="20"
+        )
+        image(
+          v-else
           xlink:href="@/assets/images/pen-icon_purple.svg"
           width="20"
           height="20"
@@ -35,6 +43,13 @@
         key="remove"
       )
         image(
+          v-if="ungroupped"
+          xlink:href="@/assets/images/close-icon_white.svg"
+          width="20"
+          height="20"
+        )
+        image(
+          v-else
           xlink:href="@/assets/images/close-icon_purple.svg"
           width="20"
           height="20"
@@ -43,10 +58,15 @@
 
 <script>
 import { debounce } from 'lodash'
+import DatePicker from 'vue2-datepicker'
 import Checkbox from './Checkbox'
 
 export default {
   props: {
+    ungroupped: {
+      type: Boolean,
+      default: false
+    },
     id: {
       type: String,
       required: true
@@ -104,9 +124,12 @@ export default {
   width: 100%
   display: flex
   align-items: center
-  border-bottom: 1px dashed $main-gradient
+  border-bottom: 1px dashed $brand-color
   padding: 10px 0
   position: relative
+
+  &--border_white
+    border-bottom-color: #fff
 
   &:hover .task__remove
     visibility: visible
@@ -123,17 +146,23 @@ export default {
     border: none
     outline: none
     background: transparent
-    color: mix(black, $main-gradient, 30%)
+    color: mix(black, $brand-color, 30%)
     font-size: 14px
     transition: color 0.2s
 
     &--completed
       text-decoration: line-through
-      color: mix(black, $main-gradient, 50%)
+      color: mix(black, $brand-color, 50%)
+
+    &--color_white
+      color: #fff
 
     &:focus
       text-decoration: none
-      color: mix(white, $main-gradient, 20%)
+      color: mix(white, $brand-color, 20%)
+
+    &--color_white:focus
+      color: white
 
   &__time
     width: 160px
