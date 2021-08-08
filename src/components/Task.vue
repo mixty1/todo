@@ -1,64 +1,48 @@
 <template lang="pug">
-  .task(:class="{ 'task--border_white': ungroupped }")
-    checkbox(
-      :checked="completed"
-      :small="ungroupped"
-      @change="$emit('change', { completed: $event.target.checked, id })"
+.task(:class='{ "task--border_white": ungroupped }')
+  checkbox(
+    :checked='completed',
+    :small='ungroupped',
+    @change='$emit("change", { completed: $event.target.checked, id })'
+  )
+  date-picker(
+    :ungroupped='ungroupped',
+    :date='scheduledAt',
+    @input='$emit("change", { scheduledAt: $event, id })'
+  )
+  input.task__text(
+    type='text',
+    :value='text',
+    :class='{ "task__text--completed": completed, "task__text--color_white": ungroupped }',
+    @input='$emit("change", { text: $event.target.value, id })',
+    @keydown='onType',
+    @keyup='onStopType',
+    :autofocus='autofocus'
+  )
+  .task__time(v-if='scheduledAt') Время: {{ scheduledAt | time }}
+  transition(name='fade', mode='out-in')
+    svg.task__typing(
+      v-if='isTyping',
+      :class='{ "task__remove--visible": isTyping }',
+      width='20',
+      height='20',
+      key='typing'
     )
-    date-picker(
-      :ungroupped="ungroupped"
-      :date="scheduledAt"
-      @input="$emit('change', { scheduledAt: $event, id })"
-    )
-    input.task__text(
-      type="text"
-      :value="text"
-      :class="{ 'task__text--completed': completed, 'task__text--color_white': ungroupped }"
-      @input="$emit('change', { text: $event.target.value, id })"
-      @keydown="onType"
-      @keyup="onStopType"
-      :autofocus="autofocus"
-    )
-    .task__time(v-if="scheduledAt") Время: {{ scheduledAt | time }}
-    transition(name="fade" mode="out-in")
-      svg.task__typing(
-        v-if="isTyping"
-        :class="{ 'task__remove--visible': isTyping }"
-        width="20"
-        height="20"
-        key="typing"
+      image(
+        v-if='ungroupped',
+        xlink:href='@/assets/images/pen-icon_white.svg',
+        width='20',
+        height='20'
       )
-        image(
-          v-if="ungroupped"
-          xlink:href="@/assets/images/pen-icon_white.svg"
-          width="20"
-          height="20"
-        )
-        image(
-          v-else
-          xlink:href="@/assets/images/pen-icon_purple.svg"
-          width="20"
-          height="20"
-        )
-      svg.task__remove(
-        v-else
-        @click="$emit('remove', id)"
-        width="20"
-        height="20"
-        key="remove"
+      image(v-else, xlink:href='@/assets/images/pen-icon_purple.svg', width='20', height='20')
+    svg.task__remove(v-else, @click='$emit("remove", id)', width='20', height='20', key='remove')
+      image(
+        v-if='ungroupped',
+        xlink:href='@/assets/images/close-icon_white.svg',
+        width='20',
+        height='20'
       )
-        image(
-          v-if="ungroupped"
-          xlink:href="@/assets/images/close-icon_white.svg"
-          width="20"
-          height="20"
-        )
-        image(
-          v-else
-          xlink:href="@/assets/images/close-icon_purple.svg"
-          width="20"
-          height="20"
-        )
+      image(v-else, xlink:href='@/assets/images/close-icon_purple.svg', width='20', height='20')
 </template>
 
 <script>
@@ -95,7 +79,7 @@ export default {
     date: null
   }),
   filters: {
-    time (date) {
+    time(date) {
       let hours = date.getHours()
       let minutes = date.getMinutes()
       let seconds = date.getSeconds()
@@ -108,12 +92,12 @@ export default {
     }
   },
   methods: {
-    onType (e) {
+    onType(e) {
       if (!(e.keyCode === 9)) {
         this.isTyping = true
       }
     },
-    onStopType: debounce(function () {
+    onStopType: debounce(function() {
       this.isTyping = false
     }, 1000)
   },

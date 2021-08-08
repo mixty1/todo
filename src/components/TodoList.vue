@@ -1,27 +1,27 @@
 <template lang="pug">
-  .todo-list
-    header.todo-list__header
-      h3.todo-list__title TO DO
-      img.todo-list__logo(src="@/assets/images/logo.png" width="70" height="50")
-      .todo-list__actions
-        .todo-list__add(@click="addTask") Добавить
-    .todo-list__tasks(v-if="tasks.length")
-      .todo-list__task-group(
-        v-for="date in reversedGrouppedTasks"
-        :class="{ 'todo-list__task-group--ungroupped': date === 'ungroupped' }"
-      )
-        .todo-list__date(v-if="date !== 'ungroupped'") {{ date }}
-        transition-group(name="tasks-list")
-          task.todo-list__task(
-            v-for="task in grouppedTasks[date]"
-            :key="task.id"
-            :ungroupped="date === 'ungroupped'"
-            v-bind="task"
-            @change="onChange"
-            @remove="onRemove"
-          )
-    .todo-list__empty-list(v-else)
-      p Отлично, работаем дальше!
+.todo-list
+  header.todo-list__header
+    h3.todo-list__title TO DO
+    img.todo-list__logo(src='@/assets/images/logo.png', width='70', height='50')
+    .todo-list__actions
+      .todo-list__add(@click='addTask') Добавить
+  .todo-list__tasks(v-if='tasks.length')
+    .todo-list__task-group(
+      v-for='date in reversedGrouppedTasks',
+      :class='{ "todo-list__task-group--ungroupped": date === "ungroupped" }'
+    )
+      .todo-list__date(v-if='date !== "ungroupped"') {{ date }}
+      transition-group(name='tasks-list')
+        task.todo-list__task(
+          v-for='task in grouppedTasks[date]',
+          :key='task.id',
+          :ungroupped='date === "ungroupped"',
+          v-bind='task',
+          @change='onChange',
+          @remove='onRemove'
+        )
+  .todo-list__empty-list(v-else)
+    p Отлично, работаем дальше!
 </template>
 
 <script>
@@ -40,13 +40,13 @@ export default {
     tasks: [
       {
         id: '1',
-        text: 'Лишить Мишу премии',
+        text: 'Поставить задачи на завтра',
         scheduledAt: new Date(),
         completed: true
       },
       {
         id: '2',
-        text: 'Подготовить презентацию по Гайдми',
+        text: 'Подготовить презентацию',
         scheduledAt: new Date(),
         completed: true
       },
@@ -58,14 +58,14 @@ export default {
       },
       {
         id: '4',
-        text: 'Полистать пикабу',
+        text: 'Изучть новый инструмент',
         scheduledAt: new Date(new Date() - 2000 - 300 * 24 * 60 * 60 * 1000),
         completed: true
       }
     ]
   }),
   computed: {
-    grouppedTasks () {
+    grouppedTasks() {
       return _.groupBy(this.tasks, task => {
         if (task.scheduledAt) {
           return this.getDate(task.scheduledAt)
@@ -74,12 +74,12 @@ export default {
         return 'ungroupped'
       })
     },
-    reversedGrouppedTasks () {
+    reversedGrouppedTasks() {
       return _.keys(this.grouppedTasks).reverse()
     }
   },
   methods: {
-    getDate (date) {
+    getDate(date) {
       let day = date.getDate()
       let month = date.getMonth() + 1
 
@@ -88,7 +88,7 @@ export default {
 
       return `${day}.${month}.${date.getFullYear()}`
     },
-    addTask () {
+    addTask() {
       const lastTask = this.tasks[this.tasks.length - 1]
 
       if (_.isEmpty(this.tasks) || (_.has(lastTask, 'text') && lastTask.text.trim())) {
@@ -98,16 +98,12 @@ export default {
         this.tasks.push(task)
       }
     },
-    onChange (value) {
+    onChange(value) {
       const index = this.tasks.findIndex(task => task.id === value.id)
 
-      this.$set(
-        this.tasks,
-        index,
-        _.merge(this.tasks[index], { ...value })
-      )
+      this.$set(this.tasks, index, _.merge(this.tasks[index], { ...value }))
     },
-    onRemove (id) {
+    onRemove(id) {
       const index = this.tasks.findIndex(task => task.id === id)
 
       this.$delete(this.tasks, index)

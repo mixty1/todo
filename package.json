@@ -23,6 +23,7 @@
     "node-sass": "^4.9.0",
     "pug": "^2.0.3",
     "pug-plain-loader": "^1.0.0",
+    "sass": "^1.37.5",
     "sass-loader": "^7.0.1",
     "vue-template-compiler": "^2.5.17"
   },
@@ -35,7 +36,9 @@
       "plugin:vue/essential",
       "@vue/standard"
     ],
-    "rules": {},
+    "rules": {
+      "space-before-function-paren": ["error", "never"]
+    },
     "parserOptions": {
       "parser": "babel-eslint"
     }

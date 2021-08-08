@@ -1,15 +1,12 @@
 <template lang="pug">
-  .checkbox
-    input.checkbox__input(
-      type="checkbox"
-      :id="`checkbox-${uuid}`"
-      :checked="checked"
-      @change="$emit('change', $event)"
-    )
-    label.checkbox__label(
-      :for="`checkbox-${uuid}`"
-      :class="{ 'checkbox__label--small': small }"
-    )
+.checkbox
+  input.checkbox__input(
+    type='checkbox',
+    :id='`checkbox-${uuid}`',
+    :checked='checked',
+    @change='$emit("change", $event)'
+  )
+  label.checkbox__label(:for='`checkbox-${uuid}`', :class='{ "checkbox__label--small": small }')
 </template>
 
 <script>

@@ -1,21 +1,21 @@
 <template lang="pug">
-  .date-picker
-    date-picker(
-      @input="$emit('input', $event)"
-      :value="date"
-      lang="ru"
-      ref="datePicker"
-      type="datetime"
-      @mouseup.stop
+.date-picker
+  date-picker(
+    @input='$emit("input", $event)',
+    :value='date',
+    lang='ru',
+    ref='datePicker',
+    type='datetime',
+    @mouseup.stop
+  )
+  svg.date-picker__icon(@click='toggleCalendar', @mouseup.stop, width='20', height='20')
+    image(
+      v-if='ungroupped',
+      xlink:href='@/assets/images/calendar-icon_white.svg',
+      width='20',
+      height='20'
     )
-    svg.date-picker__icon(
-      @click="toggleCalendar"
-      @mouseup.stop
-      width="20"
-      height="20"
-    )
-      image(v-if="ungroupped" xlink:href="@/assets/images/calendar-icon_white.svg" width="20" height="20")
-      image(v-else xlink:href="@/assets/images/calendar-icon_purple.svg" width="20" height="20")
+    image(v-else, xlink:href='@/assets/images/calendar-icon_purple.svg', width='20', height='20')
 </template>
 
 <script>
@@ -37,7 +37,7 @@ export default {
     showCalendar: false
   }),
   methods: {
-    toggleCalendar () {
+    toggleCalendar() {
       this.showCalendar = !this.showCalendar
 
       if (this.showCalendar) {
@@ -47,8 +47,10 @@ export default {
       }
     }
   },
-  mounted () {
-    document.addEventListener('mouseup', () => { this.showCalendar = false })
+  mounted() {
+    document.addEventListener('mouseup', () => {
+      this.showCalendar = false
+    })
   },
   components: {
     DatePicker
@@ -57,20 +59,20 @@ export default {
 </script>
 
 <style scoped lang="sass">
-  .date-picker
-    width: 20px
-    height: 20px
-    display: flex
-    align-items: center
-    margin: 0 10px
-    position: relative
+.date-picker
+  width: 20px
+  height: 20px
+  display: flex
+  align-items: center
+  margin: 0 10px
+  position: relative
 
-    &__icon
-      cursor: pointer
-      transition: transform 0.2s
+  &__icon
+    cursor: pointer
+    transition: transform 0.2s
 
-      &:hover
-        transform: scale(1.2)
+    &:hover
+      transform: scale(1.2)
 </style>
 
 <style lang="sass">
